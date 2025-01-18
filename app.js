@@ -1,4 +1,5 @@
 let items = [];
+let editIndex = -1;  // Variable to track which item is being edited
 
 function addItem() {
   const itemName = document.getElementById('itemName').value;
@@ -7,9 +8,18 @@ function addItem() {
     return;
   }
 
-  items.push(itemName);
-  document.getElementById('itemName').value = '';
+  if (editIndex === -1) {
+    // Adding a new item
+    items.push(itemName);
+  } else {
+    // Editing an existing item
+    items[editIndex] = itemName;
+    editIndex = -1;  // Reset the edit index
+  }
+
+  document.getElementById('itemName').value = '';  // Clear the input field
   renderItems();
+  resetButton();  // Reset the button back to 'Add Item'
 }
 
 function deleteItem(index) {
@@ -18,11 +28,20 @@ function deleteItem(index) {
 }
 
 function editItem(index) {
-  const newItemName = prompt('Edit item:', items[index]);
-  if (newItemName !== null && newItemName.trim() !== '') {
-    items[index] = newItemName;
-    renderItems();
-  }
+  // Set the input field with the item value
+  document.getElementById('itemName').value = items[index];
+  
+  // Change the button text to "Save"
+  const addButton = document.getElementById('insertItem');
+  addButton.textContent = 'Save';
+  
+  // Store the index of the item being edited
+  editIndex = index;
+}
+
+function resetButton() {
+  const addButton = document.getElementById('insertItem');
+  addButton.textContent = 'Add Item';  // Reset button to 'Add Item'
 }
 
 function renderItems() {
